@@ -71,6 +71,23 @@ class ApiProvider {
     }
   }
 
+  Future<Map<String, dynamic>> patch(String endpoint,
+      {Map<String, dynamic>? body}) async {
+    try {
+      final uri = Uri.parse('${ApiConstants.baseUrl}$endpoint');
+      final response = await http.patch(
+        uri,
+        headers: await _headers(),
+        body: body != null ? jsonEncode(body) : null,
+      );
+      return _handle(response);
+    } on ApiException {
+      rethrow;
+    } catch (e) {
+      throw ApiException(_friendlyError(e));
+    }
+  }
+
   Map<String, dynamic> _handle(http.Response response) {
     if (kDebugMode) {
       debugPrint('${response.request?.method} ${response.request?.url} → ${response.statusCode}');
