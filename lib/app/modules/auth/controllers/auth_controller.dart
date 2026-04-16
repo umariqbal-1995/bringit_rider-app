@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import '../../../data/providers/notification_service.dart';
 import '../../../data/providers/storage_provider.dart';
 import '../../../data/repositories/rider_repository.dart';
 import '../../../routes/app_pages.dart';
@@ -47,6 +48,7 @@ class AuthController extends GetxController {
       final data = res['data'] as Map<String, dynamic>? ?? res;
       final token = data['token'] as String? ?? data['accessToken'] as String? ?? '';
       await _storage.saveToken(token);
+      unawaited(NotificationService().registerTokenAfterLogin());
       Get.offAllNamed(Routes.HOME);
     } catch (e) {
       Get.snackbar('Error', e.toString(), snackPosition: SnackPosition.BOTTOM);
